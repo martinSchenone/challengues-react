@@ -4,8 +4,7 @@ export const Todos = () => {
   const [todoInfo, setTodoInfo] = useState("");
   const [todoDescription, setTodoDescription] = useState("");
   const [todos, setTodos] = useState([]);
-
-  const addTask = (e) => {
+  const addTask = () => {
     if (todoInfo) {
       const newTodo = {
         id: Math.random(),
@@ -24,9 +23,13 @@ export const Todos = () => {
     setTodos(deletedTodo);
     localStorage.setItem("todos", JSON.stringify(deletedTodo));
   };
+  // const todoIsDone = (todo) => {
+  //   const todoDone = todos.map((t) =>
+  //     t.id == todo.id ? { ...todo, isDone: !todo.isDone } : todo
+  //   );
+  // };
   const localTodosSession = localStorage.getItem("todos");
   const localTodosList = JSON.parse(localTodosSession);
-
   return (
     <div className="flex flex-col md:flex-row p-1 gap-10 max-w-7xl mx-auto ">
       <form
@@ -88,7 +91,12 @@ export const Todos = () => {
           </div>
           {localTodosList &&
             localTodosList.map((todo) => (
-              <TodoCard key={todo.id} todo={todo} deleteTodo={deleteTodo} />
+              <TodoCard
+                key={todo.id}
+                todo={todo}
+                deleteTodo={deleteTodo}
+                // todoIsDone={todoIsDone}
+              />
             ))}
           {localTodosList.length > 0 && (
             <h1 className="text-start text-xs font-semibold uppercase">
@@ -102,5 +110,3 @@ export const Todos = () => {
     </div>
   );
 };
-
-
