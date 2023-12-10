@@ -1,5 +1,5 @@
 import { useState } from "react";
-import trashcan from "../assets/trash-bin.png";
+import { TodoCard } from "./TodoCard";
 export const Todos = () => {
   const [todoInfo, setTodoInfo] = useState("");
   const [todoDescription, setTodoDescription] = useState("");
@@ -63,13 +63,7 @@ export const Todos = () => {
           ENVIAR
         </button>
       </form>
-      {/* <div>
-        {localTodosList.length <= 0 ? (
-          <h1>No todos</h1>
-        ) : (
-          <h1>You have {localTodosList.length} thing to do</h1>
-        )}
-      </div> */}
+
       <div className="flex-1 flex flex-col  min-h-screen gap-5 backdrop-blur-sm bg-[rgba(255,255,255,0.15)] shadow-md  border-gray-300 border rounded-xl p-2">
         <div className=" flex items-center justify-center border-b-2">
           <h1 className="text-3xl font-bold uppercase">to do list</h1>
@@ -85,39 +79,28 @@ export const Todos = () => {
               <h1 className="text-xl font-bold text-center">Description:</h1>
             </div>
           </div>
+          <div>
+            {localTodosList.length == 0 && (
+              <h1 className="text-center text-xl font-semibold uppercase">
+                no to do yet
+              </h1>
+            )}
+          </div>
           {localTodosList &&
             localTodosList.map((todo) => (
-              <div
-                key={todo.id}
-                className="flex justify-between border-b-2 gap-5"
-              >
-                <div className="flex items-center gap-2">
-                  <input value={todo.isDone} type="checkbox" />
-                </div>
-                <div className="flex flex-col items-center flex-1">
-                  <span className="">
-                    {todo.task.length > 15
-                      ? `${todo.task.substring(0, 15)}...`
-                      : todo.task}
-                  </span>
-                </div>
-                <div className="flex flex-col items-center flex-1">
-                  <span className=" ">
-                    {todo.description.length > 20
-                      ? `${todo.description.substring(0, 25)}...`
-                      : todo.description.length == 0
-                      ? "No description"
-                      : ""}
-                  </span>
-                </div>
-
-                <button onClick={() => deleteTodo(todo)} className="">
-                  <img src={trashcan} className="w-[25px]" />
-                </button>
-              </div>
+              <TodoCard key={todo.id} todo={todo} deleteTodo={deleteTodo} />
             ))}
+          {localTodosList.length > 0 && (
+            <h1 className="text-start text-xs font-semibold uppercase">
+              {localTodosList.length <= 1
+                ? `You have ${localTodosList.length} pending task`
+                : `You have ${localTodosList.length} pending tasks`}
+            </h1>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
+
