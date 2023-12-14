@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TodoCard } from "./TodoCard";
 export const Todos = () => {
   const [todoInfo, setTodoInfo] = useState("");
   const [todoDescription, setTodoDescription] = useState("");
   const [todos, setTodos] = useState([]);
+
   const addTask = () => {
     if (todoInfo) {
       const newTodo = {
@@ -19,21 +20,22 @@ export const Todos = () => {
     }
   };
   const deleteTodo = (todo) => {
-    const deletedTodo = todos.filter((t) => t.id !== todo.id);
+    const deletedTodo = localTodosList.filter((t) => t.id !== todo.id);
     setTodos(deletedTodo);
     localStorage.setItem("todos", JSON.stringify(deletedTodo));
   };
-  // const todoIsDone = (todo) => {
-  //   const todoDone = todos.map((t) =>
-  //     t.id == todo.id ? { ...todo, isDone: !todo.isDone } : todo
-  //   );
-  // };
+  useEffect(() => {
+    if (localTodosList) {
+      setTodos(localTodosList);
+    }
+  }, []);
   const localTodosSession = localStorage.getItem("todos");
   const localTodosList = JSON.parse(localTodosSession);
+
   return (
     <div className="flex flex-col md:flex-row p-1 gap-10 max-w-7xl mx-auto ">
       <form
-        className="flex flex-col flex-1  min-h-screen gap-5 backdrop-blur-sm bg-[rgba(255,255,255,0.15)] shadow-md  border-gray-300 border rounded-xl p-2"
+        className="flex flex-col flex-1  min-h-screen gap-5 backdrop-blur-sm bg-[rgba(255,255,255,0.15)] shadow-md  border-gray-300 border rounded-2xl p-2"
         onSubmit={(e) => e.preventDefault()}
       >
         <h1 className="text-2xl font-semibold  text-center">Create new todo</h1>
@@ -67,7 +69,7 @@ export const Todos = () => {
         </button>
       </form>
 
-      <div className="flex-1 flex flex-col  min-h-screen gap-5 backdrop-blur-sm bg-[rgba(255,255,255,0.15)] shadow-md  border-gray-300 border rounded-xl p-2">
+      <div className="flex-1 flex flex-col  min-h-screen gap-5 backdrop-blur-sm bg-[rgba(255,255,255,0.15)] shadow-md  border-gray-300 border rounded-2xl p-2">
         <div className=" flex items-center justify-center border-b-2">
           <h1 className="text-3xl font-bold uppercase">to do list</h1>
         </div>
@@ -83,7 +85,7 @@ export const Todos = () => {
             </div>
           </div>
           <div>
-            {localTodosList.length == 0 && (
+            {localTodosList && localTodosList.length == 0 && (
               <h1 className="text-center text-xl font-semibold uppercase">
                 no to do yet
               </h1>
@@ -91,14 +93,9 @@ export const Todos = () => {
           </div>
           {localTodosList &&
             localTodosList.map((todo) => (
-              <TodoCard
-                key={todo.id}
-                todo={todo}
-                deleteTodo={deleteTodo}
-                // todoIsDone={todoIsDone}
-              />
+              <TodoCard key={todo.id} todo={todo} deleteTodo={deleteTodo} />
             ))}
-          {localTodosList.length > 0 && (
+          {localTodosList && localTodosList.length > 0 && (
             <h1 className="text-start text-xs font-semibold uppercase">
               {localTodosList.length <= 1
                 ? `You have ${localTodosList.length} pending task`
